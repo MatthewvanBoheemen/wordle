@@ -2,18 +2,17 @@ import "./styles.css";
 import { useState } from "react";
 
 export default function App() {
-  var [correctWord, setCorrectWord] = useState("chimp");
+  var [correctWord, setCorrectWord] = useState("CHIMP");
   var [guessLineWords, setGuessLineWords] = useState(Array(6).fill(""));
 
-  function HandleKeyPress(key) {
+  function HandleKeyPress(event) {
     // Find where this goes
     var updatedLines = guessLineWords.slice(0);
 
     const currentLineIndex = GetCurrentLineIndex();
 
-    console.log(currentLineIndex);
-
-    updatedLines[currentLineIndex] = updatedLines[currentLineIndex] + key;
+    updatedLines[currentLineIndex] =
+      updatedLines[currentLineIndex] + event.key.toUpperCase();
 
     setGuessLineWords(updatedLines);
   }
@@ -31,12 +30,12 @@ export default function App() {
   }
 
   return (
-    <div className="App" onKeyPress={(e) => HandleKeyPress(e.key)} tabIndex="0">
-      <h1>Matt's Wordle</h1>
+    <div className="App" onKeyDown={(e) => HandleKeyPress(e)} tabIndex="0">
+      <h1>WORDLE (FROM MATT)</h1>
 
       <div className="GuessLines">
         {guessLineWords.map((word, index) => (
-          <GuessLine word={word} key={index} />
+          <GuessLine word={word} key={index} correctWord={correctWord} />
         ))}
       </div>
     </div>
@@ -44,7 +43,7 @@ export default function App() {
 }
 
 export function GuessLine(props) {
-  const { word } = props;
+  const { word, correctWord } = props;
 
   let array = Array(5);
   for (let i = 0; i < 5; i++) {
@@ -58,10 +57,38 @@ export function GuessLine(props) {
   return (
     <div className="GuessLine">
       {array.map((el, i) => (
-        <div className="Letter" key={i}>
-          {el}
-        </div>
+        <GuessLetter
+          key={i}
+          letter={el}
+          showStatus={word.length === 5}
+          correctWord={correctWord}
+          position={i}
+        />
       ))}
     </div>
   );
+}
+
+export function GuessLetter(props) {
+  const { letter, correctWord, position, showStatus } = props;
+
+  let className = "Letter";
+
+  if (showStatus) {
+    if (correctWord.substring(position, position + 1) === letter) {
+      className += " CorrectPosition";
+    } else {
+      if (correctWord.indexOf(letter) !== -1) {
+        className += " CorrectLetterWrongPosition";
+      } else {
+        className += " IncorrectLetter";
+      }
+    }
+  } else {
+    if (letter === "") {
+      className += " EmptyLetter";
+    }
+  }
+
+  return <div className={className}>{letter}</div>;
 }

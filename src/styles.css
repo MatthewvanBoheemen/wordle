@@ -14,7 +14,8 @@
 
 .GuessLines {
   margin: auto;
-  width: 350px;
+  margin-top: 60px;
+  width: 300px;
   display: flex;
   flex-direction: column;
 }
@@ -22,5 +23,24 @@
 .GuessLine {
   display: flex;
   justify-content: space-between;
-  margin-top: 25px;
+  margin-top: 8px;
+}
+
+.CorrectPosition {
+  background-color: green;
+  color: white;
+}
+
+.CorrectLetterWrongPosition {
+  background-color: orange;
+  color: white;
+}
+
+.IncorrectLetter {
+  background-color: grey;
+  color: white;
+}
+
+.EmptyLetter {
+  border-color: lightgray;
 }
